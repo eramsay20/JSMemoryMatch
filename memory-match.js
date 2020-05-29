@@ -4,7 +4,6 @@ You will create a web application for a card matching game according to the
 Memory Game requirements below. This exercise is intended to be a matching 
 game web application that allows a player to match pairs of face down cards 
 by revealing them two at a time. The player wins when all cards have been matched. 
-Use HTML, CSS, and JavaScript in order to accomplish all of the minimum requirements.
 
 Technical Requirements:
 ● All event listeners should be defined in “window.onload” with named functions
@@ -28,35 +27,28 @@ Stretch Requirements:
 3. The game is timed, with the player’s final time displayed at the end 
 -----------------------------------------------------------------------*/
 
-
-
-//----------------------Random Number Generator (START)-------------------------------/
+//-----------------------------------------------------------------------------------/
+//----------------------Random Number Generator (START)------------------------------/
+//-----------------------------------------------------------------------------------/
 function randNum (numInput) {
     let num = Math.floor(Math.random() * (numInput));
     // console.log(num);
     return num;
 };
-//----------------------Random Number Generator (END)-------------------------------/
+        //-----------------------------------------------------------------------------------/
+        //----------------------Random Number Generator (END)--------------------------------/
+        //-----------------------------------------------------------------------------------/
 
+//----------------------------------------------------------------------------------/
+//----------------------STORE GLOBAL IMAGES IN ARRAY & TIME VARIABLES (START)-------/
+//----------------------------------------------------------------------------------/
+let t0; // start time
+let t1; // end time   
 
-
-//----------------------Identify Objects & Parents (START)-------------------------------/
-// document.querySelector('body').addEventListener('click', (event) => {
-//     let clickTarget = event.target;
-//     let clickParent = clickTarget.parentNode;
-//     //  console.log(clickTarget);
-//     //  console.log(clickParent);
-// });
-// //----------------------Identify Objects & Parents (END)-------------------------------/
-
-
-
-//----------------------STORE IMAGES IN ARRAY (START)-------------------------------/
-
-let imageArr = [];
+let imageArr = []; // array of image URLs to store over img.src
 
     let img0 ="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/01_of_spades_A.svg/800px-01_of_spades_A.svg.png";
-    imageArr.push(img0);
+    imageArr.push(img0); // add URL to imgArr
 
     let img1 ="https://cdn2.bigcommerce.com/n-d57o0b/1kujmu/products/297/images/926/4H__83243.1440113515.1280.1280.png?c=2";
     imageArr.push(img1);
@@ -66,49 +58,39 @@ let imageArr = [];
 
     let img3 ="https://www.tripleclicks.com/images/site/games/cardking/i-kings.png";
     imageArr.push(img3);
-
-// console.log(imageArr);
-// https://stackoverflow.com/questions/35397728/storing-images-in-javascript-variables
-//----------------------STORE GLOBAL IMAGES IN ARRAY (END)-------------------------------/
-
+        //----------------------------------------------------------------------------------/
+        //----------------------STORE GLOBAL IMAGES IN ARRAY & TIME VARIABLES (START)-------/
+        //----------------------------------------------------------------------------------/
 
 
-//----------------------STORE GLOBAL TIME VARIABLES (START)-------------------------------/
-
-let t0;
-let t1;
-
-// https://stackoverflow.com/questions/313893/how-to-measure-time-taken-by-a-function-to-execute
-//----------------------STORE TIME VARIABLES (END)-------------------------------/
-
-
-
-//----------------------INITIALIZE GAME (START)-------------------------------/
+//----------------------------------------------------------------------------------/
+//----------------------INITIALIZE GAME (START)-------------------------------------/
+//----------------------------------------------------------------------------------/
 document.querySelector('.startButton').addEventListener('click', () => {
-    let initialCardCount = parseFloat(document.querySelector('.inputCardNum').value);
-    let cardTable = document.querySelector('.cardTable');
-    let maxImgCount = (initialCardCount/imageArr.length); // takes user input for even # of cards, divides by # images
-    let img0Count = 0; // initialize image variables
-    let img1Count = 0; // initialize image variables
-    let img2Count = 0; // initialize image variables
-    let img3Count = 0; // initialize image variables
+    let initialCardCount = parseFloat(document.querySelector('.inputCardNum').value); // store # of cards selection from user input
+    let cardTable = document.querySelector('.cardTable'); // define object array that holds all card divs
+    let maxImgCount = (initialCardCount/imageArr.length); // takes user input for even # of cards, divides by # images to ensure there's always an equal number of each type of image on board
+    let img0Count = 0; // initialize image count variables to count the number of each type of card on the board
+    let img1Count = 0; 
+    let img2Count = 0; 
+    let img3Count = 0; 
 
-    function createCard(imageArrLocation) { // create a function to create cards with linked images pulled from imgArr[]
-        let newCard = document.createElement('div');
-        let newCardImage = document.createElement('img');
+    function createCard(imageArrLocation) { // create a function to make card <div>s with 1 .img child element; images pull src data from imgArr[]
+        let newCard = document.createElement('div'); // create a new card
+        let newCardImage = document.createElement('img'); // create new img
 
-        newCard.className = "cardBack";
-        newCardImage.className = "cardImage";
-        newCardImage.src = imageArr[imageArrLocation];
+        newCard.className = "cardBack"; // add default class to new card, hides image
+        newCardImage.className = "cardImage"; // add default image class to new card image (used later when determining matches)
+        newCardImage.src = imageArr[imageArrLocation]; // add URL from randomly selected imgArr[#]
 
-        newCard.appendChild(newCardImage);
+        newCard.appendChild(newCardImage);  // add card to cardTable object array
         cardTable.appendChild(newCard);
     };
 
-    for (i=0; i < initialCardCount; i+=1){ // for loop to create number of cards == user input # of cards
+    for (i=0; i < initialCardCount; i+=1){  // for loop to create number of cards == user input # of cards
         let cardImageNum = randNum(imageArr.length); // generate random number equal to length of image array (0, 1, 2, 3)
 
-        if (cardImageNum == 0){ //create card with image that matches imgArray location = 0
+        if (cardImageNum == 0){             //create card with image that matches imgArray location = 0
             if(img0Count < maxImgCount){
                 createCard(cardImageNum);
                 img0Count++;}
@@ -116,7 +98,7 @@ document.querySelector('.startButton').addEventListener('click', () => {
                 initialCardCount = initialCardCount+1; //if cardtype0 already has the max on board, add +1 to loop length to get another random #
             }
         }
-        else if (cardImageNum == 1){ //create card with image that matches imgArray location = 1
+        else if (cardImageNum == 1){        //create card with image that matches imgArray location = 1
             if(img1Count < maxImgCount){
                 createCard(cardImageNum);
                 img1Count++;}
@@ -124,7 +106,7 @@ document.querySelector('.startButton').addEventListener('click', () => {
                 initialCardCount = initialCardCount+1;
             }
         }
-        else if (cardImageNum == 2){ //create card with image that matches imgArray location = 2
+        else if (cardImageNum == 2){        //create card with image that matches imgArray location = 2
             if(img2Count < maxImgCount){
                 createCard(cardImageNum);
                 img2Count++;}
@@ -132,7 +114,7 @@ document.querySelector('.startButton').addEventListener('click', () => {
                 initialCardCount = initialCardCount+1;
             }
         }
-        else if (cardImageNum == 3){ //create card with image that matches imgArray location = 3
+        else if (cardImageNum == 3){        //create card with image that matches imgArray location = 3
             if(img3Count < maxImgCount){
                 createCard(cardImageNum);
                 img3Count++;}
@@ -147,23 +129,26 @@ document.querySelector('.startButton').addEventListener('click', () => {
     t0= performance.now(); // store start time of the game
     document.querySelector('.message').innerHTML = "<strong>Begin!</strong>"; // replace message to say "Begin!"
 });
-//----------------------INITIALIZE GAME (END)-------------------------------/
+        //----------------------------------------------------------------------------------/
+        //----------------------INITIALIZE GAME (END)---------------------------------------/
+        //----------------------------------------------------------------------------------/
 
 
 // RESOURCE: https://scotch.io/tutorials/how-to-build-a-memory-matching-game-in-javascript // 
 // RESOURCE: https://teamtreehouse.com/library/getting-all-children-of-a-node-with-children
 
-
+//----------------------------------------------------------------------------------------------------/
 //----------------------HIDE/SHOW, MATCH LOGIC, and SCORE COUNT (START)-------------------------------/
-let clickMemCount = 0; // store click count for a single guess cycle (i.e. 2 card clicks, "0" and "1")
-let totalClickCount = 0; // keep running tally of total clicks required for the game
-// NOTE: ^^ these are the only global variable used (not allowed), and its only being used globally because the click 
-// functions would rewrite over the click count if defined inside the event listener function
+//----------------------------------------------------------------------------------------------------/
+let clickMemCount = 0;      // store click count for a single guess cycle (i.e. 2 card clicks, "0" and "1")
+let totalClickCount = 0;    // keep running tally of total clicks required for the game
+
+// NOTE: ^^ these are the only global variable used (not allowed). Only being used globally because the click 
+// functions would re-write over the accumulated click counts if defined inside the event listener function
 
 document.querySelector('.cardTable').addEventListener('click', (event) => {
-    let clickTarget = event.target;
-
-    function flipReset () { // function used to make sure any unmatched guesses are re-hidden again at the start of the next guess cycle
+    let clickTarget = event.target; // define where the player clicked in the cardTable <div>
+    function flipReset () {         // function used to make sure any unmatched guesses are re-hidden again at the start of the next guess cycle
         for (j = 0; j < document.querySelectorAll('.cardBack').length; j++) {
             if(document.querySelectorAll(".cardBack")[j].firstElementChild.className !== "revealed") {
                 document.querySelectorAll(".cardBack")[j].firstElementChild.className = "cardImage"; 
@@ -179,7 +164,7 @@ document.querySelector('.cardTable').addEventListener('click', (event) => {
             click0Target = clickTarget.firstElementChild; // store clicked card as initial card 1 of 2 in guess cycle
             click0Target.className = "show-img"; // replace class with show-img (i.e. visible)
             click0src = click0Target.src; // store clicked card's img URL as img 1 of 2 in guess cycle
-                clickMemCount++;
+                clickMemCount++; 
                 totalClickCount++;
         }
     }
@@ -200,41 +185,46 @@ document.querySelector('.cardTable').addEventListener('click', (event) => {
             clickMemCount = 0; // reset the guess cycle count to 0
             totalClickCount++;
         }
-        
         else if (click0src !== click1src) { // No match found...
             clickMemCount = 0; // reset the guess cycle count to 0
             totalClickCount++;
         }
     }
 });
-//----------------------HIDE/SHOW, MATCH LOGIC, and SCORE COUNT (END)-------------------------------/
+        //----------------------------------------------------------------------------------------------------/
+        //----------------------HIDE/SHOW, MATCH LOGIC, and SCORE COUNT (END)---------------------------------/
+        //----------------------------------------------------------------------------------------------------/
 
 
-
-
+//----------------------------------------------------------------------------------/
 //----------------------DETERMINE END OF GAME (START)-------------------------------/
+//----------------------------------------------------------------------------------/
 document.querySelector('body').addEventListener('click', (event) => {
     let clickTarget = event.target;
     let clickParent = clickTarget.parentNode;
     let cardsRevealed = document.querySelectorAll('.revealed');
     let timeLapse = 0;
 
-    if(cardsRevealed.length === imageArr.length*4) {
+    if(cardsRevealed.length === imageArr.length*4) { // If all cards flipped over... 
 
-       t1 = performance.now();
-       timeLapse = (t1-t0)/1000;
+       t1 = performance.now(); // record win time
+       timeLapse = (t1-t0)/1000; // calc time lapse
        document.querySelector('.message').innerHTML = `<strong>You won! </strong> <br> Time = ${timeLapse.toFixed(2)} secs, Clicks = ${totalClickCount}`;
        console.log(`Congrats! You've completed the game in ${timeLapse.toFixed(2)} seconds!`)
 
     }
 });
+        //----------------------------------------------------------------------------------/
+        //----------------------DETERMINE END OF GAME (END)---------------------------------/
+        //----------------------------------------------------------------------------------/
 
-//----------------------DETERMINE END OF GAME (END)-------------------------------/
 
-//----------------------RESET GAME BUTTON (START)-------------------------------/
+//----------------------------------------------------------------------------------/
+//----------------------RESET GAME BUTTON (START)-----------------------------------/
+//----------------------------------------------------------------------------------/
 document.querySelector('.resetButton').addEventListener('click', () => {
-    
     location.reload();
 });
-
-//----------------------RESET GAME BUTTON (END)-------------------------------/
+        //----------------------------------------------------------------------------------/
+        //----------------------RESET GAME BUTTON (END)-----------------------------------/
+        //----------------------------------------------------------------------------------/
