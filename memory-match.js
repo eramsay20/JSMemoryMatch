@@ -71,6 +71,22 @@ let imageArr = [];
 // https://stackoverflow.com/questions/35397728/storing-images-in-javascript-variables
 //----------------------STORE IMAGES IN ARRAY (END)-------------------------------/
 
+//----------------------STORE TIME VARIABLES (START)-------------------------------/
+
+let t0;
+let t1;
+
+        // {/* <script>
+        // var a = performance.now();
+        // alert('do something...');
+        // var b = performance.now();
+        // alert('It took ' + (b - a) + ' ms.');
+        // </script> */}
+
+
+// https://stackoverflow.com/questions/313893/how-to-measure-time-taken-by-a-function-to-execute
+//----------------------STORE TIME VARIABLES (END)-------------------------------/
+
 
 
 //----------------------INITIALIZE GAME (START)-------------------------------/
@@ -159,13 +175,13 @@ document.querySelector('.startButton').addEventListener('click', () => {
             }
         }
         else {
+            
            break;
         }
                        
     };
-    for (i=0; i < initialCardCount; i+=1){
-      
-    };
+    t0= performance.now();
+    alert('Begin the game!');
 });
 //----------------------INITIALIZE GAME (END)-------------------------------/
 
@@ -174,41 +190,79 @@ document.querySelector('.startButton').addEventListener('click', () => {
 // RESOURCE: https://teamtreehouse.com/library/getting-all-children-of-a-node-with-children
 
 //----------------------CLICKS ARRAY, REVEALS & SCORE COUNT (START)-------------------------------/
-let clickMemCount = 0;
+let clickMemCount = 0; 
+let totalClickCount = 0;
+// ^^^ this is the only global variable not allowed, and its only being used because the click 
+//functions would rewrite over the click count if left inside
 
 document.querySelector('.cardTable').addEventListener('click', (event) => {
     let clickTarget = event.target;
     let targetParent = clickTarget.parentNode;
     let targetChild = clickTarget.children[0];
+    let click0Target;
+    let click1Target;
+    let click0src;
+    let click1src;
+   
+    function flipReset () {
+
+        for (j = 0; j < document.querySelectorAll('.cardBack').length; j++) {
+            if(document.querySelectorAll(".cardBack")[j].firstElementChild.className !== "revealed") {
+                document.querySelectorAll(".cardBack")[j].firstElementChild.className = "cardImage"; 
+                // console.log(document.querySelectorAll(".cardBack")[j].firstElementChild.className);
+            }
+        }
+    }
+
     // console.log(clickTarget);
     // console.log(targetParent);
     // console.log(targetChild);
-    if(clickMemCount < 2) {
+
+    if(clickMemCount == 0) {
+        flipReset();
+        document.querySelector('.guessCount').innerHTML = totalClickCount+1;
 
         if (clickTarget.children[0].className = "cardImage"){
-            clickTarget.children[0].className="cardImageReveal";
-            clickMemCount++;
-            console.log(clickMemCount);
-            console.log(clickTarget.children[0].className);
+            clickTarget.children[0].className="show-img";
+            click0 = clickTarget.children[0]
+            click0Img = clickTarget.children[0].src;
+                clickMemCount++;
+                totalClickCount++;
+                console.log(`totalClickCount = `+totalClickCount);
+
         }
     }
-    
-    else {
-        alert("no match! try again");
-        console.log(`no match`);
-        console.log(document.querySelectorAll('.cardBack').length); // 16
-        console.log(document.getElementsByClassName('cardBack')[0]); // <div class="cardBack"><img class="cardImage" src="https://www.tripleclicks.com/images/site/games/cardking/i-kings.png"></div>
-        console.log(document.querySelectorAll(".cardBack")[0].children[0].className);
-        
-        for (j = 0; j < document.querySelectorAll('.cardBack').length; j++) {
 
-            document.querySelectorAll(".cardBack")[j].firstElementChild.className = "cardImage";
-            console.log(document.querySelectorAll(".cardBack")[j].firstElementChild.className);
-            }
+    else if (clickMemCount == 1) {
+        document.querySelector('.guessCount').innerHTML = totalClickCount+1;
+        if (clickTarget.children[0].className = "cardImage"){
+            click1 = clickTarget.children[0]
+            click1.className = "show-img";
+            click1Img = click1.src;
+            clickMemCount++;
+        }        
+        
+        if (click0Img == click1Img && click0.className !== "revealed" && click1.className!=="revealed") {
+            click0.className = "revealed";
+            click1.className = "revealed";
+
             clickMemCount = 0;
+            totalClickCount++;
+            console.log(`totalClickCount = `+totalClickCount);
+            console.log("It's a match!");
         }
         
-    });
+        else if (click0Img !== click1Img) {
+            clickMemCount = 0;
+            totalClickCount++;
+
+            console.log(`totalClickCount = `+totalClickCount);
+            console.log("No match! try again");  
+        }
+        
+    }
+});
+
 
 
 //----------------------COUNT CLICKS ARRAY (END)-------------------------------/
