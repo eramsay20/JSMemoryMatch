@@ -87,14 +87,13 @@ let t1;
 document.querySelector('.startButton').addEventListener('click', () => {
     let initialCardCount = parseFloat(document.querySelector('.inputCardNum').value);
     let cardTable = document.querySelector('.cardTable');
-
     let maxImgCount = (initialCardCount/imageArr.length); // takes user input for even # of cards, divides by # images
     let img0Count = 0; // initialize image variables
     let img1Count = 0; // initialize image variables
     let img2Count = 0; // initialize image variables
     let img3Count = 0; // initialize image variables
 
-    function createCard(imageArrLocation) {
+    function createCard(imageArrLocation) { // create a function to create cards with linked images pulled from imgArr[]
         let newCard = document.createElement('div');
         let newCardImage = document.createElement('img');
 
@@ -109,15 +108,15 @@ document.querySelector('.startButton').addEventListener('click', () => {
     for (i=0; i < initialCardCount; i+=1){ // for loop to create number of cards == user input # of cards
         let cardImageNum = randNum(imageArr.length); // generate random number equal to length of image array (0, 1, 2, 3)
 
-        if (cardImageNum == 0){
+        if (cardImageNum == 0){ //create card with image that matches imgArray location = 0
             if(img0Count < maxImgCount){
                 createCard(cardImageNum);
                 img0Count++;}
             else {
-                initialCardCount = initialCardCount+1;
+                initialCardCount = initialCardCount+1; //if cardtype0 already has the max on board, add +1 to loop length to get another random #
             }
         }
-        else if (cardImageNum == 1){
+        else if (cardImageNum == 1){ //create card with image that matches imgArray location = 1
             if(img1Count < maxImgCount){
                 createCard(cardImageNum);
                 img1Count++;}
@@ -125,7 +124,7 @@ document.querySelector('.startButton').addEventListener('click', () => {
                 initialCardCount = initialCardCount+1;
             }
         }
-        else if (cardImageNum == 2){
+        else if (cardImageNum == 2){ //create card with image that matches imgArray location = 2
             if(img2Count < maxImgCount){
                 createCard(cardImageNum);
                 img2Count++;}
@@ -133,7 +132,7 @@ document.querySelector('.startButton').addEventListener('click', () => {
                 initialCardCount = initialCardCount+1;
             }
         }
-        else if (cardImageNum == 3){
+        else if (cardImageNum == 3){ //create card with image that matches imgArray location = 3
             if(img3Count < maxImgCount){
                 createCard(cardImageNum);
                 img3Count++;}
@@ -142,13 +141,11 @@ document.querySelector('.startButton').addEventListener('click', () => {
             }
         }
         else {
-            
-           break;
+           break; // once all have maxed out, exit the loop
         }
-                       
-    };
-    t0= performance.now();
-    document.querySelector('.message').innerHTML = "<strong>Begin!</strong>";
+    }           
+    t0= performance.now(); // store start time of the game
+    document.querySelector('.message').innerHTML = "<strong>Begin!</strong>"; // replace message to say "Begin!"
 });
 //----------------------INITIALIZE GAME (END)-------------------------------/
 
@@ -156,83 +153,64 @@ document.querySelector('.startButton').addEventListener('click', () => {
 // RESOURCE: https://scotch.io/tutorials/how-to-build-a-memory-matching-game-in-javascript // 
 // RESOURCE: https://teamtreehouse.com/library/getting-all-children-of-a-node-with-children
 
-//----------------------CLICKS ARRAY, REVEALS & SCORE COUNT (START)-------------------------------/
-let clickMemCount = 0; 
-let totalClickCount = 0;
-// ^^^ this is the only global variable not allowed, and its only being used because the click 
-//functions would rewrite over the click count if left inside
+
+//----------------------HIDE/SHOW, MATCH LOGIC, and SCORE COUNT (START)-------------------------------/
+let clickMemCount = 0; // store click count for a single guess cycle (i.e. 2 card clicks, "0" and "1")
+let totalClickCount = 0; // keep running tally of total clicks required for the game
+// NOTE: ^^ these are the only global variable used (not allowed), and its only being used globally because the click 
+// functions would rewrite over the click count if defined inside the event listener function
 
 document.querySelector('.cardTable').addEventListener('click', (event) => {
     let clickTarget = event.target;
-    let targetParent = clickTarget.parentNode;
-    let targetChild = clickTarget.children[0];
-    let click0Target;
-    let click1Target;
-    let click0src;
-    let click1src;
-   
-    function flipReset () {
 
+    function flipReset () { // function used to make sure any unmatched guesses are re-hidden again at the start of the next guess cycle
         for (j = 0; j < document.querySelectorAll('.cardBack').length; j++) {
             if(document.querySelectorAll(".cardBack")[j].firstElementChild.className !== "revealed") {
                 document.querySelectorAll(".cardBack")[j].firstElementChild.className = "cardImage"; 
-                // console.log(document.querySelectorAll(".cardBack")[j].firstElementChild.className);
             }
         }
     }
 
-    // console.log(clickTarget);
-    // console.log(targetParent);
-    // console.log(targetChild);
+    if(clickMemCount == 0) { // if click 1 of 2 in guess cycle...
+        flipReset(); // make sure all unmatched from prior guess cycle are flipped back over
+        document.querySelector('.guessCount').innerHTML = totalClickCount+1; // add the new click to the click counter shown in window
 
-    if(clickMemCount == 0) {
-        flipReset();
-        document.querySelector('.guessCount').innerHTML = totalClickCount+1;
-
-        if (clickTarget.children[0].className = "cardImage"){
-            clickTarget.children[0].className="show-img";
-            click0 = clickTarget.children[0]
-            click0Img = clickTarget.children[0].src;
+        if (clickTarget.firstElementChild.className == "cardImage"){ // if img class is default (hidden)...
+            click0Target = clickTarget.firstElementChild; // store clicked card as initial card 1 of 2 in guess cycle
+            click0Target.className = "show-img"; // replace class with show-img (i.e. visible)
+            click0src = click0Target.src; // store clicked card's img URL as img 1 of 2 in guess cycle
                 clickMemCount++;
                 totalClickCount++;
-                console.log(`totalClickCount = `+totalClickCount);
-
         }
     }
-
-    else if (clickMemCount == 1) {
-        document.querySelector('.guessCount').innerHTML = totalClickCount+1;
-        if (clickTarget.children[0].className = "cardImage"){
-            click1 = clickTarget.children[0]
-            click1.className = "show-img";
-            click1Img = click1.src;
+    else if (clickMemCount == 1) {// if click 2 of 2 in guess cycle...
+        document.querySelector('.guessCount').innerHTML = totalClickCount+1; // add the new click to the click counter shown in window
+       
+        if (clickTarget.firstElementChild.className == "cardImage"){ // if img class is default (hidden)...
+            click1Target = clickTarget.firstElementChild; // store clicked card as initial card 2 of 2 in guess cycle
+            click1Target.className = "show-img"; // replace class with show-img (i.e. visible)
+            click1src = click1Target.src; // store clicked card's img URL as img 1 of 2 in guess cycle
             clickMemCount++;
         }        
-        
-        if (click0Img == click1Img && click0.className !== "revealed" && click1.className!=="revealed") {
-            click0.className = "revealed";
-            click1.className = "revealed";
+        // BELOW IS LOGIC USED TO EVALUATE WHETHER A MATCH EXISTS //
+        if (click0src == click1src && click0Target.className !== "revealed" && click1Target.className !== "revealed") { // URL matches, and cards 1&2 are not already revealed...
+            click0Target.className = "revealed"; // set class to revealed to permenantly leave as visible
+            click1Target.className = "revealed"; // set class to revealed to permenantly leave as visible
 
-            clickMemCount = 0;
+            clickMemCount = 0; // reset the guess cycle count to 0
             totalClickCount++;
-            console.log(`totalClickCount = `+totalClickCount);
-            console.log("It's a match!");
         }
         
-        else if (click0Img !== click1Img) {
-            clickMemCount = 0;
+        else if (click0src !== click1src) { // No match found...
+            clickMemCount = 0; // reset the guess cycle count to 0
             totalClickCount++;
-
-            console.log(`totalClickCount = `+totalClickCount);
-            console.log("No match! try again");  
         }
-        
     }
 });
+//----------------------HIDE/SHOW, MATCH LOGIC, and SCORE COUNT (END)-------------------------------/
 
 
 
-//----------------------COUNT CLICKS ARRAY (END)-------------------------------/
 
 //----------------------DETERMINE END OF GAME (START)-------------------------------/
 document.querySelector('body').addEventListener('click', (event) => {
