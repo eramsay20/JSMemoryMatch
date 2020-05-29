@@ -69,20 +69,14 @@ let imageArr = [];
 
 // console.log(imageArr);
 // https://stackoverflow.com/questions/35397728/storing-images-in-javascript-variables
-//----------------------STORE IMAGES IN ARRAY (END)-------------------------------/
+//----------------------STORE GLOBAL IMAGES IN ARRAY (END)-------------------------------/
 
-//----------------------STORE TIME VARIABLES (START)-------------------------------/
+
+
+//----------------------STORE GLOBAL TIME VARIABLES (START)-------------------------------/
 
 let t0;
 let t1;
-
-        // {/* <script>
-        // var a = performance.now();
-        // alert('do something...');
-        // var b = performance.now();
-        // alert('It took ' + (b - a) + ' ms.');
-        // </script> */}
-
 
 // https://stackoverflow.com/questions/313893/how-to-measure-time-taken-by-a-function-to-execute
 //----------------------STORE TIME VARIABLES (END)-------------------------------/
@@ -94,33 +88,30 @@ document.querySelector('.startButton').addEventListener('click', () => {
     let initialCardCount = parseFloat(document.querySelector('.inputCardNum').value);
     let cardTable = document.querySelector('.cardTable');
 
-    let maxImgCount = (initialCardCount/4); // since there are 4 types of images
-    let img0Count = 0;
-    let img1Count = 0;
-    let img2Count = 0;
-    let img3Count = 0;
+    let maxImgCount = (initialCardCount/imageArr.length); // takes user input for even # of cards, divides by # images
+    let img0Count = 0; // initialize image variables
+    let img1Count = 0; // initialize image variables
+    let img2Count = 0; // initialize image variables
+    let img3Count = 0; // initialize image variables
 
-        // console.log(initialCardCount);
-        // console.log(cardTable.length);
-        // console.log(cardTable);
+    function createCard(imageArrLocation) {
+        let newCard = document.createElement('div');
+        let newCardImage = document.createElement('img');
 
+        newCard.className = "cardBack";
+        newCardImage.className = "cardImage";
+        newCardImage.src = imageArr[imageArrLocation];
 
-    for (i=0; i < initialCardCount; i+=1){
-        let cardImageNum = randNum(4);
-        // console.log(cardImageNum);
+        newCard.appendChild(newCardImage);
+        cardTable.appendChild(newCard);
+    };
+
+    for (i=0; i < initialCardCount; i+=1){ // for loop to create number of cards == user input # of cards
+        let cardImageNum = randNum(imageArr.length); // generate random number equal to length of image array (0, 1, 2, 3)
 
         if (cardImageNum == 0){
             if(img0Count < maxImgCount){
-                let newCard = document.createElement('div');
-                let newCardImage = document.createElement('img');
-
-                newCard.className = "cardBack";
-                newCardImage.className = "cardImage";
-                newCardImage.src = imageArr[cardImageNum];
-
-                newCard.appendChild(newCardImage);
-                cardTable.appendChild(newCard);
-                
+                createCard(cardImageNum);
                 img0Count++;}
             else {
                 initialCardCount = initialCardCount+1;
@@ -128,15 +119,7 @@ document.querySelector('.startButton').addEventListener('click', () => {
         }
         else if (cardImageNum == 1){
             if(img1Count < maxImgCount){
-                let newCard = document.createElement('div');
-                let newCardImage = document.createElement('img');
-
-                newCard.className = "cardBack";
-                newCardImage.className = "cardImage";
-                newCardImage.src = imageArr[cardImageNum];
-
-                newCard.appendChild(newCardImage);
-                cardTable.appendChild(newCard);
+                createCard(cardImageNum);
                 img1Count++;}
             else {
                 initialCardCount = initialCardCount+1;
@@ -144,15 +127,7 @@ document.querySelector('.startButton').addEventListener('click', () => {
         }
         else if (cardImageNum == 2){
             if(img2Count < maxImgCount){
-                let newCard = document.createElement('div');
-                let newCardImage = document.createElement('img');
-
-                newCard.className = "cardBack";
-                newCardImage.className = "cardImage";
-                newCardImage.src = imageArr[cardImageNum];
-
-                newCard.appendChild(newCardImage);
-                cardTable.appendChild(newCard);
+                createCard(cardImageNum);
                 img2Count++;}
             else {
                 initialCardCount = initialCardCount+1;
@@ -160,15 +135,7 @@ document.querySelector('.startButton').addEventListener('click', () => {
         }
         else if (cardImageNum == 3){
             if(img3Count < maxImgCount){
-                let newCard = document.createElement('div');
-                let newCardImage = document.createElement('img');
-
-                newCard.className = "cardBack";
-                newCardImage.className = "cardImage";
-                newCardImage.src = imageArr[cardImageNum];
-
-                newCard.appendChild(newCardImage);
-                cardTable.appendChild(newCard);
+                createCard(cardImageNum);
                 img3Count++;}
             else {
                 initialCardCount = initialCardCount+1;
@@ -181,7 +148,7 @@ document.querySelector('.startButton').addEventListener('click', () => {
                        
     };
     t0= performance.now();
-    alert('Begin the game!');
+    document.querySelector('.message').innerHTML = "<strong>Begin!</strong>";
 });
 //----------------------INITIALIZE GAME (END)-------------------------------/
 
@@ -278,10 +245,18 @@ document.querySelector('body').addEventListener('click', (event) => {
 
        t1 = performance.now();
        timeLapse = (t1-t0)/1000;
-       console.log(timeLapse.toFixed(2));
-       alert(`Congrats! You've completed the game in ${timeLapse.toFixed(2)} seconds!`)
+       document.querySelector('.message').innerHTML = `<strong>You won! </strong> <br> Time = ${timeLapse.toFixed(2)} secs, Clicks = ${totalClickCount}`;
+       console.log(`Congrats! You've completed the game in ${timeLapse.toFixed(2)} seconds!`)
 
     }
 });
 
 //----------------------DETERMINE END OF GAME (END)-------------------------------/
+
+//----------------------RESET GAME BUTTON (START)-------------------------------/
+document.querySelector('.resetButton').addEventListener('click', () => {
+    
+    location.reload();
+});
+
+//----------------------RESET GAME BUTTON (END)-------------------------------/
