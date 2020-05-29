@@ -12,7 +12,7 @@ Technical Requirements:
 variables can be global variables
 ● All styling in CSS file
 ● All events and functionality in JavaScript file
-● Multiple functions This
+● Multiple functions 
 ● Comments in the code explaining each section
 
 Requirements:
@@ -28,7 +28,7 @@ Stretch Requirements:
 3. The game is timed, with the player’s final time displayed at the end 
 -----------------------------------------------------------------------*/
 
-// RESOURCE: https://scotch.io/tutorials/how-to-build-a-memory-matching-game-in-javascript // 
+
 
 //----------------------Random Number Generator (START)-------------------------------/
 function randNum (numInput) {
@@ -38,6 +38,8 @@ function randNum (numInput) {
 };
 //----------------------Random Number Generator (END)-------------------------------/
 
+
+
 //----------------------Identify Objects & Parents (START)-------------------------------/
 document.querySelector('body').addEventListener('click', (event) => {
     let clickTarget = event.target;
@@ -46,6 +48,8 @@ document.querySelector('body').addEventListener('click', (event) => {
     //  console.log(clickParent);
 });
 //----------------------Identify Objects & Parents (END)-------------------------------/
+
+
 
 //----------------------STORE IMAGES IN ARRAY (START)-------------------------------/
 
@@ -63,14 +67,14 @@ let imageArr = [];
     let img3 ="https://www.tripleclicks.com/images/site/games/cardking/i-kings.png";
     imageArr.push(img3);
 
-console.log(imageArr);
+// console.log(imageArr);
 // https://stackoverflow.com/questions/35397728/storing-images-in-javascript-variables
 //----------------------STORE IMAGES IN ARRAY (END)-------------------------------/
 
-// console.log(document.querySelectorAll("#card")); // WORKS, CREATES ARRAY
 
+
+//----------------------INITIALIZE GAME (START)-------------------------------/
 document.querySelector('.startButton').addEventListener('click', () => {
-    let cardArr = document.querySelectorAll('#card');
     let initialCardCount = parseFloat(document.querySelector('.inputCardNum').value);
     let cardTable = document.querySelector('.cardTable');
 
@@ -80,7 +84,6 @@ document.querySelector('.startButton').addEventListener('click', () => {
     let img2Count = 0;
     let img3Count = 0;
 
-        // console.log(cardArr);
         // console.log(initialCardCount);
         // console.log(cardTable.length);
         // console.log(cardTable);
@@ -97,8 +100,7 @@ document.querySelector('.startButton').addEventListener('click', () => {
 
                 newCard.className = "cardBack";
                 newCardImage.className = "cardImage";
-                newCardImage.src = imageArr[0];
-                console.log(newCardImage.src);
+                newCardImage.src = imageArr[cardImageNum];
 
                 newCard.appendChild(newCardImage);
                 cardTable.appendChild(newCard);
@@ -115,7 +117,7 @@ document.querySelector('.startButton').addEventListener('click', () => {
 
                 newCard.className = "cardBack";
                 newCardImage.className = "cardImage";
-                newCardImage.src = imageArr[1];
+                newCardImage.src = imageArr[cardImageNum];
 
                 newCard.appendChild(newCardImage);
                 cardTable.appendChild(newCard);
@@ -131,7 +133,7 @@ document.querySelector('.startButton').addEventListener('click', () => {
 
                 newCard.className = "cardBack";
                 newCardImage.className = "cardImage";
-                newCardImage.src = imageArr[2];
+                newCardImage.src = imageArr[cardImageNum];
 
                 newCard.appendChild(newCardImage);
                 cardTable.appendChild(newCard);
@@ -147,7 +149,7 @@ document.querySelector('.startButton').addEventListener('click', () => {
 
                 newCard.className = "cardBack";
                 newCardImage.className = "cardImage";
-                newCardImage.src = imageArr["3"];
+                newCardImage.src = imageArr[cardImageNum];
 
                 newCard.appendChild(newCardImage);
                 cardTable.appendChild(newCard);
@@ -161,37 +163,52 @@ document.querySelector('.startButton').addEventListener('click', () => {
         }
                        
     };
-    // console.log(Object.keys(cardTable).length);
-
-    
-    // let newCard = document.createElement('li');
-    
-    // let dueDate = document.createElement('input');
-    // let deleteButton = document.createElement('button');
-    // let descriptLi = document.createElement('li');
-
-    // dueDate.type = "date";
-
-    // dueDate.className= "dueDate";
-    // saveButton.className = "saveButton";
-    // deleteButton.className = "deleteButton";
-    // descriptLi.className = "descriptLi";
-
-    // dueDate.value = document.querySelector('.dueDateSelector').value;
-    // listItem.value = document.querySelector('.addItemInput').value;
-    // descriptLi.textContent = document.querySelector('.addItemDescript').value;
-    // saveButton.textContent = "Save";
-    // deleteButton.textContent = "Delete";
-
-    // li.appendChild(dueDate);
-    // li.appendChild(listItem);
-    // li.appendChild(saveButton);
-    // li.appendChild(deleteButton);
-
-    // ul.appendChild(li);
-    // ul.appendChild(descriptLi);
-
-    // document.querySelector('.addItemInput').value = '';
-    // document.querySelector('.addItemDescript').value = '';
-    // document.querySelector('.dueDateSelector').value = '';
+    for (i=0; i < initialCardCount; i+=1){
+      
+    };
 });
+//----------------------INITIALIZE GAME (END)-------------------------------/
+
+
+// RESOURCE: https://scotch.io/tutorials/how-to-build-a-memory-matching-game-in-javascript // 
+// RESOURCE: https://teamtreehouse.com/library/getting-all-children-of-a-node-with-children
+
+//----------------------CLICKS ARRAY, REVEALS & SCORE COUNT (START)-------------------------------/
+let clickMemCount = 0;
+
+document.querySelector('.cardTable').addEventListener('click', (event) => {
+    let clickTarget = event.target;
+    let targetParent = clickTarget.parentNode;
+    let targetChild = clickTarget.children[0];
+    // console.log(clickTarget);
+    // console.log(targetParent);
+    // console.log(targetChild);
+    if(clickMemCount < 2) {
+
+        if (clickTarget.children[0].className = "cardImage"){
+            clickTarget.children[0].className="cardImageReveal";
+            clickMemCount++;
+            console.log(clickMemCount);
+            console.log(clickTarget.children[0].className);
+        }
+    }
+    
+    else {
+        alert("no match! try again");
+        console.log(`no match`);
+        console.log(document.querySelectorAll('.cardBack').length); // 16
+        console.log(document.getElementsByClassName('cardBack')[0]); // <div class="cardBack"><img class="cardImage" src="https://www.tripleclicks.com/images/site/games/cardking/i-kings.png"></div>
+        console.log(document.querySelectorAll(".cardBack")[0].children[0].className);
+        
+        for (j = 0; j < document.querySelectorAll('.cardBack').length; j++) {
+
+            document.querySelectorAll(".cardBack")[j].firstElementChild.className = "cardImage";
+            console.log(document.querySelectorAll(".cardBack")[j].firstElementChild.className);
+            }
+            clickMemCount = 0;
+        }
+        
+    });
+
+
+//----------------------COUNT CLICKS ARRAY (END)-------------------------------/
