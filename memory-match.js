@@ -41,13 +41,13 @@ function randNum (numInput) {
 
 
 //----------------------Identify Objects & Parents (START)-------------------------------/
-document.querySelector('body').addEventListener('click', (event) => {
-    let clickTarget = event.target;
-    let clickParent = clickTarget.parentNode;
-    //  console.log(clickTarget);
-    //  console.log(clickParent);
-});
-//----------------------Identify Objects & Parents (END)-------------------------------/
+// document.querySelector('body').addEventListener('click', (event) => {
+//     let clickTarget = event.target;
+//     let clickParent = clickTarget.parentNode;
+//     //  console.log(clickTarget);
+//     //  console.log(clickParent);
+// });
+// //----------------------Identify Objects & Parents (END)-------------------------------/
 
 
 
@@ -266,3 +266,22 @@ document.querySelector('.cardTable').addEventListener('click', (event) => {
 
 
 //----------------------COUNT CLICKS ARRAY (END)-------------------------------/
+
+//----------------------DETERMINE END OF GAME (START)-------------------------------/
+document.querySelector('body').addEventListener('click', (event) => {
+    let clickTarget = event.target;
+    let clickParent = clickTarget.parentNode;
+    let cardsRevealed = document.querySelectorAll('.revealed');
+    let timeLapse = 0;
+
+    if(cardsRevealed.length === imageArr.length*4) {
+
+       t1 = performance.now();
+       timeLapse = (t1-t0)/1000;
+       console.log(timeLapse.toFixed(2));
+       alert(`Congrats! You've completed the game in ${timeLapse.toFixed(2)} seconds!`)
+
+    }
+});
+
+//----------------------DETERMINE END OF GAME (END)-------------------------------/
